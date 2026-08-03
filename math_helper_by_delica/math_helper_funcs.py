@@ -45,3 +45,10 @@ def round_to_precision(val, prec):
 
 result = round_to_precision(150.00, 10)
 test = 0
+
+
+def get_num_sig_figs(val, prec):
+    test = 0
+
+def rect_area(length, width, length_prec, width_prec):
+    product = length * width
