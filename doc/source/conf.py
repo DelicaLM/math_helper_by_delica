@@ -60,7 +60,7 @@ napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 
 autodoc2_packages = [
-    "../../new_python_package/math_helper_funcs.py",
+    "../../math_helper_by_delica/math_helper_funcs.py",
 "../../tests/test_math_helper_funcs.py"
 ]
 #templates_path = ['_templates']
