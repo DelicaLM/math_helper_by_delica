@@ -5,13 +5,13 @@ this_directory = Path(__file__).parent
 long_description = (this_directory / "README.md").read_text()
 
 setup(
-    name='new_python_package',
+    name='math_helper_by_delica',
     use_scm_version=True,
     setup_requires=['setuptools_scm'],
-    description="A template for Python repositories on GitHub.",
+    description="A Python package with a variety of mathematical functions.",
     author="Delica Leboe-McGowan",
     author_email="stormindustries22@outlook.com",
-    packages=['new_python_package'],
+    packages=['math_helper_by_delica'],
     install_requires=[
 
     ],
