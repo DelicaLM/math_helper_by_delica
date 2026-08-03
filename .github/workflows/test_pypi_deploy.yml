@@ -44,7 +44,7 @@ jobs:
 
     environment:
       name: testpypi
-      url: https://test.pypi.org/p/new_python_package
+      url: https://test.pypi.org/p/math_helper_by_delica
 
     permissions:
       id-token: write  # IMPORTANT: mandatory for trusted publishing

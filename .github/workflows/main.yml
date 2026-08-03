@@ -25,4 +25,4 @@ jobs:
           pip install -e .
       - name: Execute Tests
         run: | 
-          python3 tests/test_new_python_funcs.py
+          python3 tests/test_math_helper_funcs.py

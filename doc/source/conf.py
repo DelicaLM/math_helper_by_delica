@@ -12,7 +12,7 @@ version_num = ""
 
 curr_directory = os.path.dirname(os.path.abspath(__file__))
 project_directory = os.path.dirname(os.path.dirname(curr_directory))
-init_directory = os.path.join(project_directory, "new_python_package/")
+init_directory = os.path.join(project_directory, "math_helper_by_delica/")
 init_path = os.path.join(init_directory, "__init__.py")
 
 try:
@@ -29,7 +29,7 @@ try:
 except FileNotFoundError:
     version_num = ""
 
-project = 'new-python-package'
+project = 'math-helper-by-delica'
 copyright = '2026, Delica Leboe-McGowan'
 author = 'Delica Leboe-McGowan'
 release = version_num
@@ -60,8 +60,8 @@ napoleon_google_docstring = False
 napoleon_numpy_docstring = True
 
 autodoc2_packages = [
-    "../../new_python_package/new_python_funcs.py",
-"../../tests/test_new_python_funcs.py"
+    "../../new_python_package/math_helper_funcs.py",
+"../../tests/test_math_helper_funcs.py"
 ]
 #templates_path = ['_templates']
 exclude_patterns = []
