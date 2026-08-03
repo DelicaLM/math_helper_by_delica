@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use this package, please reference it with the following citation."
+authors:
+- family-names: "Leboe-McGowan"
+  given-names: "Delica"
+  orcid: "https://orcid.org/0000-0001-8901-7295"
+title: "New Python Package"
+version: 1.0
+date-released: 2026-07-15
+url: "https://github.com/DelicaLM/new_python_package"

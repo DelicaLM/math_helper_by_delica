@@ -1,0 +1,49 @@
+# Workflow for generating documentation files with sphinx
+# Reference: This file is closely based on the documentation.yml file provided by Jonathan Arias Busto in
+# their extremely helpful Medium article (link below).
+# https://medium.com/@ariassbustojonathan/automate-python-documentation-with-sphinx-for-github-3dda2ca690ec
+
+
+name: documentation
+
+permissions:
+  contents: write
+  id-token: write
+  pages: write
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  docs:
+    if: github.event.release.target_commitish == 'main'
+    environment:
+      name: github-pages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - name: Install dependencies
+        run: |
+          pip install --upgrade sphinx sphinx_rtd_theme myst_parser sphinx-autodoc2
+      - name: Sphinx build
+        run: |
+          cd doc
+          make clean
+          sphinx-build source _build
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Check Directory
+        run: |
+          pwd
+          cd doc
+          ls
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './doc/_build'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+

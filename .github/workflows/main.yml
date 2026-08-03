@@ -1,0 +1,28 @@
+# Testing Workflow
+
+name: Run Tests
+
+on: [push]
+
+permissions:
+  contents: write
+  id-token: write
+  pages: write
+
+jobs:
+  tests:
+    name: Testing the Test Helper Package
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.x"
+      - name: Install local package
+        run:  |
+          pip install -e .
+      - name: Execute Tests
+        run: | 
+          python3 tests/test_new_python_funcs.py
