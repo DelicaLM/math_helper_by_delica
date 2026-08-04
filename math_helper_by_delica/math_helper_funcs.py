@@ -73,7 +73,7 @@ def round_to_precision(val, prec):
         error_lib.check_value_is_positive(prec, "rounding precision")
         int_val = int(val)
         if prec == 1:
-            result = int_val
+            result = round(val)
         else:
             prec_log = int(m.log10(prec))
             if prec_log >= 0:

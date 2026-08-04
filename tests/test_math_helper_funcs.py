@@ -28,3 +28,18 @@ if test_find_num_integer_digits or run_all_tests:
         IOPair((-109,), (3,)),
     ])
 
+if test_round_to_precision or run_all_tests:
+    test_lib.run_func_tests(math_lib.round_to_precision, [
+        IOPair((0, 1), (0,)),
+        IOPair((0, 2), (0,)),
+        IOPair((0, 0.1), (0,)),
+        IOPair((0, 0.01), (0,)),
+        IOPair((0.2, 1), (0,)),
+        IOPair((0.7, 1), (1,)),
+        IOPair((1.1, 1), (1,)),
+        IOPair((1.9, 1), (2,)),
+        IOPair((115, 1), (115,)),
+        IOPair((115, 0.1), (115.0,)),
+        IOPair((116, 10), (120,)),
+        IOPair((116, 100), (100,)),
+    ])
