@@ -2,8 +2,27 @@ import math as m
 import error_helper_by_delica as error_lib
 
 
-
 def find_num_integer_digits(val):
+    """Finds the number of integer digits in a float or integer value.
+
+    Note: This function defines the number of integer digits in 0 as zero. Values 1-9.999... have one integer digit,
+    10-99.999... have two, etc. The same rules apply for negative values.
+
+    Parameters
+    ----------
+    val : float | int
+        The value in which we should find the number of integer digits.
+
+    Returns
+    -------
+    num_integer_digits : int
+        The number of integer digits in the provided float or integer value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the value to round is not a float or integer.
+    """
     error_lib.check_type(val, float, "find integer digits value", alt_type=int)
     int_val = abs(int(val))
     num_integer_digits = 0
@@ -25,6 +44,28 @@ def find_num_integer_digits(val):
 
 
 def round_to_precision(val, prec):
+    """Rounds a float or integer value to a specified precision.
+
+    Parameters
+    ----------
+    val : float | int
+        The value to round.
+    prec : float | int
+        The smallest base-10 order of magnitude at which we can measure the value (e.g, 10 if we should round to the
+        tens place, 1 if we should round to the ones place, 0.1 if we should round to the tenths place, 0.01 if we
+        should round to the hundredths place, etc.). Please note that this value cannot be zero or negative.
+
+    Returns
+    -------
+    rounded_val : float | int
+        The rounded value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the value to round is not a float or integer, the precision is not a float or integer, or the
+        precision is negative or zero.
+    """
     error_lib.check_type(val, float, "value to round", alt_type=int)
     result = val
     if prec != -1:
@@ -37,10 +78,8 @@ def round_to_precision(val, prec):
             prec_log = int(m.log10(prec))
             if prec_log >= 0:
                 result = round(int_val, -prec_log)
-                test = 0
             else:
                 result = round(val, -prec_log)
-                test = 0
     return result
 
 
@@ -95,16 +134,16 @@ def add_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
     result_val = unrounded_result
     result_num_sig_figs = -1
     if val_1_prec != -1 or val_2_prec != -1:
-        smaller_prec = val_1_prec
+        bigger_prec = val_1_prec
         if val_1_prec == -1:
-            smaller_prec = val_2_prec
+            bigger_prec = val_2_prec
         if val_1_prec != -1 and val_2_prec != -1:
-            if val_1_prec < val_2_prec:
-                smaller_prec = val_1_prec
+            if val_1_prec > val_2_prec:
+                bigger_prec = val_1_prec
             else:
-                smaller_prec = val_2_prec
-        result_val = round_to_precision(unrounded_result, smaller_prec)
-        result_num_sig_figs = get_num_sig_figs(unrounded_result, smaller_prec)
+                bigger_prec = val_2_prec
+        result_val = round_to_precision(unrounded_result, bigger_prec)
+        result_num_sig_figs = get_num_sig_figs(unrounded_result, bigger_prec)
     return result_val, result_num_sig_figs
 
 
