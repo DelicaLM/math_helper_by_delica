@@ -82,26 +82,79 @@ def round_to_precision(val, prec):
                 result = round(val, -prec_log)
     return result
 
+def get_num_leading_decimal_zeros(float_val, prec=-1):
+    """Calculates the number of leading decimal zeros in a float value.
 
-def get_num_leading_decimal_zeros(float_val, prec):
+    For example, 0.1 has zero leading decimal zeros, 0.01 has one, 0.001 has two, and so on.
+
+    Parameters
+    ----------
+    float_val : float | int
+        The float value in which we should find the number of leading decimal zeros. If an integer is provided, the
+        returned number of leading decimal zeros will always be zero (because an integer does not have a fractional
+        component).
+    prec : float | int, default -1
+        The precision of the float value (i.e. the smallest base-10 order of magnitude at which we can measure
+        the float value, such as 1 if we only know the number to the ones place, 10 if we know it to the tens, 0.1 if
+        we know it the tenths, 0.01 if we know it to the hundredths, etc.). If the value is known to an infinite
+        precision (e.g., for universal constants), one can use the default precision value (-1). However, the actual
+        precision used in this default case will be 10^-15, because values below 10^-15 in Python are highly
+        susceptible to numerical errors. If you are not using the default precision, you must provide a positive value
+        for this parameter (because negative precisions are undefined and can cause errors in this function's
+        logarithmic operations).
+
+    Returns
+    -------
+    num_leading_zeros : int
+        The number of leading zeros in the float value (up to the specified precision).
+
+    Raises
+    ------
+    TypeError
+        Raised if the value to round or the precision is not a float or integer.
+    ValueError
+        Raised if the precision is not positive and is not the default value of -1.
+    """
+    error_lib.check_type(float_val, float, "float value", alt_type=int)
+    if prec != -1:
+        error_lib.check_type(prec, float, "float precision", alt_type=int)
+        error_lib.check_value_is_positive(prec, "float precision")
     num_leading_zeros = 0
     abs_float_val = abs(float_val)
     if abs_float_val < 1.0:
         num_multiplies = 0
-        max_num_multiplies = int(-m.log10(prec))
+        max_num_multiplies = 15
+        if prec != -1:
+            max_num_multiplies = int(-m.log10(prec))
         temp_val = abs_float_val
         while temp_val < 1 and num_multiplies < max_num_multiplies:
             temp_val *= 10.0
             num_multiplies += 1
         num_leading_zeros = num_multiplies - 1
-        test = 0
     return num_leading_zeros
 
-# result = get_num_leading_decimal_zeros(1.01, 0.1)
-# test = 0
-
 def get_num_sig_figs(val, prec):
-    result = 0
+    """Calculates the number of significant figures in an integer or float based on a specified precision.
+
+    Parameters
+    ----------
+    val : int | float
+        The value in which we should find the number of significant figures.
+    prec : int | float
+        The precision (base-10 order of magnitude at which we can measure the integer or float value) that should be
+        used for calculating the number of significant figures. This value must be positive. A precision of 1 means
+        we will count significant figures down to the ones place, 0.1 if we will count down to the tenths
+        place, 0.01 if we will count down to the hundredths place, etc.
+
+    Returns
+    -------
+    num_sig_figs : int
+        The number of significant figures in the integer or float value.
+    """
+    error_lib.check_type(val, float, "val", alt_type=int)
+    error_lib.check_type(prec, float, "precision", alt_type=int)
+    error_lib.check_value_is_positive(prec, "precision")
+    num_sig_figs = 0
     num_integer_digits = find_num_integer_digits(val)
     num_int_sig_figs = 0
     if prec <= 1:
@@ -113,10 +166,10 @@ def get_num_sig_figs(val, prec):
         num_float_sig_figs = int(-1*m.log10(prec))
     if num_int_sig_figs == 0:
         num_leading_zeros = get_num_leading_decimal_zeros(val, prec)
-        result = num_float_sig_figs - num_leading_zeros
+        num_sig_figs = num_float_sig_figs - num_leading_zeros
     else:
-        result = num_int_sig_figs + num_float_sig_figs
-    return result
+        num_sig_figs = num_int_sig_figs + num_float_sig_figs
+    return num_sig_figs
 
 # result = get_num_sig_figs(0.05, 0.01)
 # test = 0
