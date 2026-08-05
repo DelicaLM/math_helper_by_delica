@@ -13,6 +13,8 @@ test_round_to_precision = True
 "bool : Boolean flag for whether or not to run the tests for the round_to_precision function."
 test_get_num_leading_decimal_zeros = True
 "bool : Boolean flag for whether or not to run the tests for the get_num_leading_decimal_zeros function."
+test_get_num_sig_figs = True
+"bool : Boolean flag for whether or not to run the tests for the get_num_sig_figs function."
 
 
 if test_find_num_integer_digits or run_all_tests:
@@ -78,4 +80,28 @@ if test_get_num_leading_decimal_zeros or run_all_tests:
         IOPair((-0.9,), (0,)),
         IOPair((-0.09,), (1,)),
         IOPair((-0.009,), (2,)),
+    ])
+
+if test_get_num_sig_figs or run_all_tests:
+    test_lib.run_func_tests(math_lib.get_num_sig_figs, [
+        IOPair((0, 1), (0,)),
+        IOPair((0.0,1), (0,)),
+        IOPair((1, 1), (1,)),
+        IOPair((2, 1), (1,)),
+        IOPair((10, 10), (1,)),
+        IOPair((10, 1), (2,)),
+        IOPair((101290, 10), (5,)),
+        IOPair((9909.0, 0.1), (5,)),
+        IOPair((0.0023, 0.001), (1,)),
+        IOPair((0.0023, 0.0001), (2,)),
+        IOPair((-1, 1), (1,)),
+        IOPair((-2, 1), (1,)),
+        IOPair((-10, 10), (1,)),
+        IOPair((-10, 1), (2,)),
+        IOPair((-101290, 10), (5,)),
+        IOPair((-9909.0, 0.1), (5,)),
+        IOPair((-0.0023, 0.001), (1,)),
+        IOPair((-0.0023, 0.0001), (2,)),
+        IOPair((0, 0), (ValueError,)),
+        IOPair((0, -1), (ValueError,)),
     ])

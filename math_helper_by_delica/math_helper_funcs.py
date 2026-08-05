@@ -157,24 +157,41 @@ def get_num_sig_figs(val, prec):
     num_sig_figs = 0
     num_integer_digits = find_num_integer_digits(val)
     num_int_sig_figs = 0
-    if prec <= 1:
-        num_int_sig_figs = num_integer_digits
+    if val == 0:
+        num_sig_figs = 0
     else:
-        num_int_sig_figs = num_integer_digits - int(m.log10(prec))
-    num_float_sig_figs = 0
-    if prec < 1:
-        num_float_sig_figs = int(-1*m.log10(prec))
-    if num_int_sig_figs == 0:
-        num_leading_zeros = get_num_leading_decimal_zeros(val, prec)
-        num_sig_figs = num_float_sig_figs - num_leading_zeros
-    else:
-        num_sig_figs = num_int_sig_figs + num_float_sig_figs
+        if prec <= 1:
+            num_int_sig_figs = num_integer_digits
+        else:
+            num_int_sig_figs = num_integer_digits - int(m.log10(prec))
+        num_float_sig_figs = 0
+        if prec < 1:
+            num_float_sig_figs = int(-1*m.log10(prec))
+        if num_int_sig_figs == 0:
+            num_leading_zeros = get_num_leading_decimal_zeros(val, prec)
+            num_sig_figs = num_float_sig_figs - num_leading_zeros
+        else:
+            num_sig_figs = num_int_sig_figs + num_float_sig_figs
     return num_sig_figs
 
-# result = get_num_sig_figs(0.05, 0.01)
-# test = 0
-
 def add_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
+    """Calculates the sum of two values rounded to the correct number of significant figures.
+
+    Parameters
+    ----------
+    val_1 : int | float
+        The first value in the sum.
+    val_2 : int | float
+        The second value in the sum.
+    val_1_prec : int | float, default -1
+        The precision of the first value (1 for value rounded to the ones place, 10 for value rounded to the tens
+        0.1 for value round to the tenths place, etc.). If the first value is a constant with an infinite precision,
+        please use the default precision of -1.
+    val_2_prec : int | float, default -1
+        The precision of the second value (1 for value rounded to the ones place, 10 for value rounded to the tens
+        0.1 for value round to the tenths place, etc.). If the second value is a constant with an infinite precision,
+        please use the default precision of -1.
+    """
     error_lib.check_type(val_1, float, "Value 1 (in add with sig figs)", alt_type=int)
     error_lib.check_type(val_2, float, "Value 2 (in add with sig figs)", alt_type=int)
     error_lib.check_type(val_1_prec, float, "Value 1 Precision (in add with sig figs)", alt_type=int)
