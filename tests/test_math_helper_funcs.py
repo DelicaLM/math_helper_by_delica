@@ -4,22 +4,24 @@ import math_helper_by_delica as math_lib
 import test_helper_by_delica as test_lib
 from test_helper_by_delica.IOPair import IOPair
 
-run_all_tests = True
+run_all_tests = False
 "bool : Boolean flag for whether all tests should be run, regardless of their boolean flags below."
 
 test_find_num_integer_digits = False
 "bool : Boolean flag for whether or not to run the tests for the find_num_integer_digits function."
-test_round_to_precision = True
+test_round_to_precision = False
 "bool : Boolean flag for whether or not to run the tests for the round_to_precision function."
-test_round_to_num_sig_figs = True
+test_round_to_num_sig_figs = False
 "bool : Boolean flag for whether or not to run the tests for the round_to_num_sig_figs function."
-test_get_num_leading_decimal_zeros = True
+test_get_num_leading_decimal_zeros = False
 "bool : Boolean flag for whether or not to run the tests for the get_num_leading_decimal_zeros function."
-test_get_num_sig_figs = True
+test_get_num_sig_figs = False
 "bool : Boolean flag for whether or not to run the tests for the get_num_sig_figs function."
-test_add_vals_with_sig_figs = True
+test_add_vals_with_sig_figs = False
 "bool : Boolean flag for whether or not to run the tests for the add_vals_with_sig_figs function."
-test_mult_vals_with_sig_figs = True
+test_add_list_vals_with_sig_figs = True
+"bool : Boolean flag for whether or not to run the tests for the add_list_vals_with_sig_figs function."
+test_mult_vals_with_sig_figs = False
 "bool : Boolean flag for whether or not to run the tests for the mult_vals_with_sig_figs function."
 
 
@@ -152,6 +154,13 @@ if test_add_vals_with_sig_figs or run_all_tests:
         IOPair((101, 10, 1, 10), (110, 2)),
         IOPair((6.000, 10, 0.001, 10), (20, 1)),
         IOPair((20000, 1000, 10000, 1), (20000, 1)),
+    ])
+
+if test_add_list_vals_with_sig_figs or run_all_tests:
+    test_lib.run_func_tests(math_lib.add_list_vals_with_sig_figs, [
+        IOPair(([],), (0, -1)),
+        IOPair(([1],), (1, -1)),
+        IOPair(([1],[-1]), (1,-1)),
     ])
 
 if test_mult_vals_with_sig_figs or run_all_tests:
