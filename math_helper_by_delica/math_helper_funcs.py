@@ -1,5 +1,8 @@
+import math
 import math as m
 import error_helper_by_delica as error_lib
+
+PI = m.pi
 
 
 def find_num_integer_digits(val):
@@ -354,10 +357,41 @@ def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
         rounded_prod = round_to_num_sig_figs(unrounded_result, num_prod_sig_figs)
     return rounded_prod, num_prod_sig_figs
 
-def convert_deg_to_rad_with_sig_figs(num_degrees, prec):
+def convert_deg_to_rad_with_sig_figs(num_degrees, prec=-1):
+    """Converts an angle in degrees to the equivalent number of radians (rounded to the correct number of significant
+    figures).
+
+    Parameters
+    ----------
+    num_degrees : int | float
+        The angle in degrees.
+    prec : int | float, default -1
+        The precision of the angle measured in degrees (-1 if it is infinitely precise, 10 if it is known to the tens
+        place, 1 if it is known to the ones place, 0.1 if it is known to the tenths, etc.).
+
+    Returns
+    -------
+    rounded_num_rads : float
+        The angle in radians rounded to the correct number of significant figures.
+    num_rad_sig_figs : int
+        The number of significant figures in the radian angle value.
+    """
     error_lib.check_type(num_degrees, float, "Angle Size in Degrees", alt_type=float)
     error_lib.check_type(prec, int, "Degree Angle Size Precision", alt_type=float)
-    error_lib.check_value_is_positive(prec, "Degree Angle Size Precision")
+    if prec != -1:
+        error_lib.check_value_is_positive(prec, "Degree Angle Size Precision")
+    unrounded_num_rads = (2.0 * PI / 360.0) * num_degrees
+    rounded_num_rads = unrounded_num_rads
+    num_rad_sig_figs = -1
+    if prec != -1:
+        num_deg_sig_figs = get_num_sig_figs(num_degrees, prec)
+        num_rad_sig_figs = num_deg_sig_figs
+        rounded_num_rads = round_to_num_sig_figs(unrounded_num_rads, num_rad_sig_figs)
+    return rounded_num_rads, num_rad_sig_figs
+
+
+
+
 
 
 def rect_area(length, width, length_prec=-1, width_prec=-1):
