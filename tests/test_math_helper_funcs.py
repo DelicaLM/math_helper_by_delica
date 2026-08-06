@@ -4,7 +4,7 @@ import math_helper_by_delica as math_lib
 import test_helper_by_delica as test_lib
 from test_helper_by_delica.IOPair import IOPair
 
-run_all_tests = False
+run_all_tests = True
 "bool : Boolean flag for whether all tests should be run, regardless of their boolean flags below."
 
 test_find_num_integer_digits = False
@@ -15,6 +15,8 @@ test_get_num_leading_decimal_zeros = True
 "bool : Boolean flag for whether or not to run the tests for the get_num_leading_decimal_zeros function."
 test_get_num_sig_figs = True
 "bool : Boolean flag for whether or not to run the tests for the get_num_sig_figs function."
+test_add_vals_with_sig_figs = True
+"bool : Boolean flag for whether or not to run the tests for the add_vals_with_sig_figs function."
 
 
 if test_find_num_integer_digits or run_all_tests:
@@ -30,6 +32,11 @@ if test_find_num_integer_digits or run_all_tests:
         IOPair((-10,), (2,)),
         IOPair((-100,), (3,)),
         IOPair((-109,), (3,)),
+        IOPair((0.1,), (0,)),
+        IOPair((1.1,), (1,)),
+        IOPair((10.1,), (2,)),
+        IOPair(("1",), (TypeError,)),
+        IOPair((True,), (TypeError,)),
     ])
 
 if test_round_to_precision or run_all_tests:
@@ -56,6 +63,9 @@ if test_round_to_precision or run_all_tests:
         IOPair((-116, 10), (-120,)),
         IOPair((-116, 100), (-100,)),
         IOPair((-1162728.00023, 0.0001), (-1162728.0002,)),
+        IOPair((True, 1), (TypeError,)),
+        IOPair((1, True), (TypeError,)),
+        IOPair((1, -0.1), (ValueError,)),
     ])
 
 if test_get_num_leading_decimal_zeros or run_all_tests:
@@ -80,12 +90,16 @@ if test_get_num_leading_decimal_zeros or run_all_tests:
         IOPair((-0.9,), (0,)),
         IOPair((-0.09,), (1,)),
         IOPair((-0.009,), (2,)),
+        IOPair((True,), (TypeError,)),
+        IOPair(("1",), (TypeError,)),
     ])
 
 if test_get_num_sig_figs or run_all_tests:
     test_lib.run_func_tests(math_lib.get_num_sig_figs, [
-        IOPair((0, 1), (0,)),
-        IOPair((0.0,1), (0,)),
+        IOPair((0, 1), (1,)),
+        IOPair((0.0,1), (1,)),
+        IOPair((0.00, 0.1), (1,)),
+        IOPair((0.00, 0.01), (1,)),
         IOPair((1, 1), (1,)),
         IOPair((2, 1), (1,)),
         IOPair((10, 10), (1,)),
@@ -104,4 +118,16 @@ if test_get_num_sig_figs or run_all_tests:
         IOPair((-0.0023, 0.0001), (2,)),
         IOPair((0, 0), (ValueError,)),
         IOPair((0, -1), (ValueError,)),
+        IOPair((True, 1), (TypeError,)),
+        IOPair((1, True), (TypeError,)),
+    ])
+
+if test_add_vals_with_sig_figs or run_all_tests:
+    test_lib.run_func_tests(math_lib.add_vals_with_sig_figs, [
+        # IOPair((1, 1),(2, -1)),
+        # IOPair((1.5, 1.5), (3, -1)),
+        # IOPair((1, 1, 1, 1), (2, 1)),
+        # IOPair((1, 1, 1), (2, 1)),
+        # IOPair((1, 1, -1, 1), (2, 1)),
+        IOPair((-1, 1, -1, 1), (0, 1)),
     ])
