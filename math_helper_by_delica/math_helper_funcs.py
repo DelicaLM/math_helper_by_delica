@@ -316,5 +316,26 @@ def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
     return rounded_prod, num_prod_sig_figs
 
 
-def rect_area(length, width, length_prec, width_prec):
-    product = length * width
+def rect_area(length, width, length_prec=-1, width_prec=-1):
+    error_lib.check_type(length, float, "length", alt_type=int)
+    error_lib.check_value_is_positive_or_zero(length, "length")
+    error_lib.check_type(width, float, "width", alt_type=int)
+    error_lib.check_value_is_positive_or_zero(width, "width")
+    error_lib.check_type(length_prec, float, "length precision", alt_type=int)
+    if length_prec != -1:
+        error_lib.check_value_is_positive(length_prec, "length precision")
+    error_lib.check_type(width_prec, float, "width precision", alt_type=int)
+    if length_prec != -1:
+        error_lib.check_value_is_positive(length_prec, "width precision")
+    rect_area, rect_area_num_sig_figs = mult_vals_with_sig_figs(length, width, length_prec, width_prec)
+    return rect_area, rect_area_num_sig_figs
+
+def square_area(side_length, side_length_prec=-1):
+    error_lib.check_type(side_length, float, "side length", alt_type=int)
+    error_lib.check_value_is_positive_or_zero(side_length, "side length")
+    error_lib.check_type(side_length_prec, float, "side length precision", alt_type=int)
+    if side_length_prec != -1:
+        error_lib.check_value_is_positive(side_length_prec, "side length precision")
+    square_area, square_area_num_sig_figs = rect_area(side_length, side_length, side_length_prec, side_length_prec)
+    return square_area, square_area_num_sig_figs
+
