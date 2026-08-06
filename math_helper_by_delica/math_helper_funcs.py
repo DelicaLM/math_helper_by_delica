@@ -354,6 +354,11 @@ def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
         rounded_prod = round_to_num_sig_figs(unrounded_result, num_prod_sig_figs)
     return rounded_prod, num_prod_sig_figs
 
+def convert_deg_to_rad_with_sig_figs(num_degrees, prec):
+    error_lib.check_type(num_degrees, float, "Angle Size in Degrees", alt_type=float)
+    error_lib.check_type(prec, int, "Degree Angle Size Precision", alt_type=float)
+    error_lib.check_value_is_positive(prec, "Degree Angle Size Precision")
+
 
 def rect_area(length, width, length_prec=-1, width_prec=-1):
     error_lib.check_type(length, float, "length", alt_type=int)
