@@ -311,11 +311,9 @@ def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
         num_prod_sig_figs = val_1_num_sig_figs
     elif val_1_prec == -1 and val_2_prec != -1:
         num_prod_sig_figs = val_2_num_sig_figs
-    num_sig_figs = -1
     if num_prod_sig_figs != -1:
-        rounded_sum = round_to_precision(unrounded_result, bigger_prec)
-        num_sig_figs = get_num_sig_figs(unrounded_result, bigger_prec)
-    return rounded_prod, num_sig_figs
+        rounded_prod = round_to_num_sig_figs(unrounded_result, num_prod_sig_figs)
+    return rounded_prod, num_prod_sig_figs
 
 
 def rect_area(length, width, length_prec, width_prec):

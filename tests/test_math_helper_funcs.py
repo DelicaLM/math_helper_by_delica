@@ -19,6 +19,8 @@ test_get_num_sig_figs = True
 "bool : Boolean flag for whether or not to run the tests for the get_num_sig_figs function."
 test_add_vals_with_sig_figs = True
 "bool : Boolean flag for whether or not to run the tests for the add_vals_with_sig_figs function."
+test_mult_vals_with_sig_figs = True
+"bool : Boolean flag for whether or not to run the tests for the mult_vals_with_sig_figs function."
 
 
 if test_find_num_integer_digits or run_all_tests:
@@ -79,6 +81,10 @@ if test_round_to_num_sig_figs or run_all_tests:
         IOPair((-101, 2), (-100,)),
         IOPair((-101.2, 3), (-101,)),
         IOPair((-1401.2, 2), (-1400,)),
+        IOPair((0, 0), (ValueError,)),
+        IOPair((0, -1), (ValueError,)),
+        IOPair((0, True), (TypeError,)),
+        IOPair((True, 0), (TypeError,)),
     ])
 
 if test_get_num_leading_decimal_zeros or run_all_tests:
@@ -146,4 +152,13 @@ if test_add_vals_with_sig_figs or run_all_tests:
         IOPair((101, 10, 1, 10), (110, 2)),
         IOPair((6.000, 10, 0.001, 10), (20, 1)),
         IOPair((20000, 1000, 10000, 1), (20000, 1)),
+    ])
+
+if test_mult_vals_with_sig_figs or run_all_tests:
+    test_lib.run_func_tests(math_lib.mult_vals_with_sig_figs, [
+        IOPair((1, 1),(1, -1)),
+        IOPair((1, 1, 1, 1), (1, 1)),
+        IOPair((0, 1), (0, -1)),
+        IOPair((50, 5), (250, -1)),
+        IOPair((50, 5, 10), (200, 1)),
     ])
