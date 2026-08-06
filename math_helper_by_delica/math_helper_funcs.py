@@ -266,49 +266,37 @@ def add_list_vals_with_sig_figs(val_list, precisions=-1):
     Parameters
     ----------
     val_list : list[int | float]
-    val_1 : int | float
-        The first value in the sum.
-    val_2 : int | float
-        The second value in the sum.
-    val_1_prec : int | float, default -1
-        The precision of the first value (1 for value rounded to the ones place, 10 for value rounded to the tens
-        0.1 for value round to the tenths place, etc.). If the first value is a constant with an infinite precision,
-        please use the default precision of -1.
-    val_2_prec : int | float, default -1
-        The precision of the second value (1 for value rounded to the ones place, 10 for value rounded to the tens
-        0.1 for value round to the tenths place, etc.). If the second value is a constant with an infinite precision,
-        please use the default precision of -1.
+        The list of values to sum.
+    precisions : int | float | list[int | float], default -1
+        The precisions of the list values (e.g., -1 for infinite precision, 10 for value rounded to the tens, 1 for
+        value rounded to the ones place, 0.1 for value rounded to the tenths place, etc.). If a single precision value
+        is provided, this precision will be applied to all of the list values. If the list contains values with
+        different precisions, provide the different values in the form of a list. The order of the precisions does
+        not matter, because the largest precision value will always be the one that is ultimately used for rounding
+        the sum result.
 
     Returns
     -------
     rounded_sum : int | float
-        The sum of two values rounded to the correct number of significant figures.
+        The sum of the list values rounded to the correct number of significant figures.
     num_sig_figs : int
         The number of significant figures in the sum value. If the sum is a constant with an infinite precision,
         this value will be -1 (because a constant theoretically has infinitely many significant figures).
     """
-    error_lib.check_type(val_1, float, "Value 1 (in add with sig figs)", alt_type=int)
-    error_lib.check_type(val_2, float, "Value 2 (in add with sig figs)", alt_type=int)
-    error_lib.check_type(val_1_prec, float, "Value 1 Precision (in add with sig figs)", alt_type=int)
-    if val_1_prec != -1:
-        error_lib.check_value_is_positive(val_1_prec, "Value 1 Precision")
-    error_lib.check_type(val_2_prec, float, "Value 2 Precision (in add with sig figs)", alt_type=int)
-    if val_2_prec != -1:
-        error_lib.check_value_is_positive(val_2_prec, "Value 2 Precision")
-    unrounded_result = val_1 + val_2
+    error_lib.check_type(val_list, list, "Value List (in add list values with sig figs)")
+    error_lib.check_type(precisions, list, "Value Precisions (in add list values with sig figs)",
+                         alt_types=[int, float])
+    unrounded_result = sum(val_list)
+    result_prec = -1
+    if type(precisions) == int or type(precisions) == float:
+        result_prec = precisions
+    else:
+        result_prec = max(precisions)
     rounded_sum = unrounded_result
     num_sig_figs = -1
-    if val_1_prec != -1 or val_2_prec != -1:
-        bigger_prec = val_1_prec
-        if val_1_prec == -1:
-            bigger_prec = val_2_prec
-        if val_1_prec != -1 and val_2_prec != -1:
-            if val_1_prec > val_2_prec:
-                bigger_prec = val_1_prec
-            else:
-                bigger_prec = val_2_prec
-        rounded_sum = round_to_precision(unrounded_result, bigger_prec)
-        num_sig_figs = get_num_sig_figs(unrounded_result, bigger_prec)
+    if result_prec != -1:
+        rounded_sum = round_to_precision(unrounded_result, result_prec)
+        num_sig_figs = get_num_sig_figs(unrounded_result, result_prec)
     return rounded_sum, num_sig_figs
 
 def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
