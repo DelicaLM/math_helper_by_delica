@@ -11,6 +11,8 @@ test_find_num_integer_digits = False
 "bool : Boolean flag for whether or not to run the tests for the find_num_integer_digits function."
 test_round_to_precision = True
 "bool : Boolean flag for whether or not to run the tests for the round_to_precision function."
+test_round_to_num_sig_figs = True
+"bool : Boolean flag for whether or not to run the tests for the round_to_num_sig_figs function."
 test_get_num_leading_decimal_zeros = True
 "bool : Boolean flag for whether or not to run the tests for the get_num_leading_decimal_zeros function."
 test_get_num_sig_figs = True
@@ -66,6 +68,17 @@ if test_round_to_precision or run_all_tests:
         IOPair((True, 1), (TypeError,)),
         IOPair((1, True), (TypeError,)),
         IOPair((1, -0.1), (ValueError,)),
+    ])
+
+if test_round_to_num_sig_figs or run_all_tests:
+    test_lib.run_func_tests(math_lib.round_to_num_sig_figs, [
+        IOPair((0, 1), (0,)),
+        IOPair((101, 2), (100,)),
+        IOPair((101.2, 3), (101,)),
+        IOPair((1401.2, 2), (1400,)),
+        IOPair((-101, 2), (-100,)),
+        IOPair((-101.2, 3), (-101,)),
+        IOPair((-1401.2, 2), (-1400,)),
     ])
 
 if test_get_num_leading_decimal_zeros or run_all_tests:
@@ -124,10 +137,13 @@ if test_get_num_sig_figs or run_all_tests:
 
 if test_add_vals_with_sig_figs or run_all_tests:
     test_lib.run_func_tests(math_lib.add_vals_with_sig_figs, [
-        # IOPair((1, 1),(2, -1)),
-        # IOPair((1.5, 1.5), (3, -1)),
-        # IOPair((1, 1, 1, 1), (2, 1)),
-        # IOPair((1, 1, 1), (2, 1)),
-        # IOPair((1, 1, -1, 1), (2, 1)),
+        IOPair((1, 1),(2, -1)),
+        IOPair((1.5, 1.5), (3, -1)),
+        IOPair((1, 1, 1, 1), (2, 1)),
+        IOPair((1, 1, 1), (2, 1)),
+        IOPair((1, 1, -1, 1), (2, 1)),
         IOPair((-1, 1, -1, 1), (0, 1)),
+        IOPair((101, 10, 1, 10), (110, 2)),
+        IOPair((6.000, 10, 0.001, 10), (20, 1)),
+        IOPair((20000, 1000, 10000, 1), (20000, 1)),
     ])

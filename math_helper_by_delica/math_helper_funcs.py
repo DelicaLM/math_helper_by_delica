@@ -63,8 +63,9 @@ def round_to_precision(val, prec):
     Raises
     ------
     TypeError
-        Raised if the value to round is not a float or integer, the precision is not a float or integer, or the
-        precision is negative or zero.
+        Raised if the value to round is not a float or integer or the precision is not a float or integer.
+    ValueError
+        Raised if the precision is negative or zero.
     """
     error_lib.check_type(val, float, "value to round", alt_type=int)
     result = val
@@ -81,6 +82,44 @@ def round_to_precision(val, prec):
             else:
                 result = round(val, -prec_log)
     return result
+
+def round_to_num_sig_figs(val, num_sig_figs):
+    """Rounds a float or integer value to a specified number of significant figures.
+
+    Parameters
+    ----------
+    val : float | int
+        The value to round.
+    num_sig_figs : int
+        The number of significant figures that should be in the rounded value (must be a positive integer).
+
+    Returns
+    -------
+    rounded_val : float | int
+        The rounded value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the value to round is not a float or integer, the number of significant figures is not an integer.
+    ValueError
+        Raised if the number of significant figures negative or zero.
+    """
+    error_lib.check_type(val, float, "value to round", alt_type=int)
+    error_lib.check_type(num_sig_figs, int, "number of significant figures")
+    error_lib.check_value_is_positive(num_sig_figs, "number of significant figures")
+    result = val
+    num_integer_digits = find_num_integer_digits(val)
+    if num_integer_digits == num_sig_figs:
+        result = round_to_precision(val, 1)
+    elif num_integer_digits > num_sig_figs:
+        left_out_digits = num_integer_digits - num_sig_figs
+        result = round_to_precision(val, 10**left_out_digits)
+    else:
+        num_float_digits = num_sig_figs - num_integer_digits
+        result = round_to_precision(val, 0.1**num_float_digits)
+    return result
+
 
 def get_num_leading_decimal_zeros(float_val, prec=-1):
     """Calculates the number of leading decimal zeros in a float value.
@@ -221,7 +260,62 @@ def add_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
         num_sig_figs = get_num_sig_figs(unrounded_result, bigger_prec)
     return rounded_sum, num_sig_figs
 
+def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
+    """Calculates the product of two values rounded to the correct number of significant figures.
 
+    Parameters
+    ----------
+    val_1 : int | float
+        The first value in the product.
+    val_2 : int | float
+        The second value in the product.
+    val_1_prec : int | float, default -1
+        The precision of the first value (1 for value rounded to the ones place, 10 for value rounded to the tens
+        0.1 for value round to the tenths place, etc.). If the first value is a constant with an infinite precision,
+        please use the default precision of -1.
+    val_2_prec : int | float, default -1
+        The precision of the second value (1 for value rounded to the ones place, 10 for value rounded to the tens
+        0.1 for value round to the tenths place, etc.). If the second value is a constant with an infinite precision,
+        please use the default precision of -1.
+
+    Returns
+    -------
+    rounded_prod : int | float
+        The product of two values rounded to the correct number of significant figures.
+    num_sig_figs : int
+        The number of significant figures in the product value. If the product is a constant with an infinite precision,
+        this value will be -1 (because a constant theoretically has infinitely many significant figures).
+    """
+    error_lib.check_type(val_1, float, "Value 1 (in mult with sig figs)", alt_type=int)
+    error_lib.check_type(val_2, float, "Value 2 (in mult with sig figs)", alt_type=int)
+    error_lib.check_type(val_1_prec, float, "Value 1 Precision (in mult with sig figs)", alt_type=int)
+    if val_1_prec != -1:
+        error_lib.check_value_is_positive(val_1_prec, "Value 1 Precision (in mult with sig figs)")
+    error_lib.check_type(val_2_prec, float, "Value 2 Precision (in mult with sig figs)", alt_type=int)
+    if val_2_prec != -1:
+        error_lib.check_value_is_positive(val_2_prec, "Value 2 Precision (in mult with sig figs)")
+    unrounded_result = val_1 * val_2
+    rounded_prod = unrounded_result
+    val_1_num_sig_figs = -1
+    if val_1_prec != -1:
+        val_1_num_sig_figs = get_num_sig_figs(val_1, val_1_prec)
+    val_2_num_sig_figs = -1
+    if val_2_prec != -1:
+        val_2_num_sig_figs = get_num_sig_figs(val_2, val_2_prec)
+    num_prod_sig_figs = -1
+    if val_1_prec != -1 and val_2_prec != -1:
+        num_prod_sig_figs = val_1_num_sig_figs
+        if val_2_num_sig_figs < val_1_num_sig_figs:
+            num_prod_sig_figs = val_2_num_sig_figs
+    elif val_1_prec != -1 and val_2_prec == -1:
+        num_prod_sig_figs = val_1_num_sig_figs
+    elif val_1_prec == -1 and val_2_prec != -1:
+        num_prod_sig_figs = val_2_num_sig_figs
+    num_sig_figs = -1
+    if num_prod_sig_figs != -1:
+        rounded_sum = round_to_precision(unrounded_result, bigger_prec)
+        num_sig_figs = get_num_sig_figs(unrounded_result, bigger_prec)
+    return rounded_prod, num_sig_figs
 
 
 def rect_area(length, width, length_prec, width_prec):
