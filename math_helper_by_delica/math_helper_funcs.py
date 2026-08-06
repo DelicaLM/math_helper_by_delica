@@ -375,8 +375,15 @@ def convert_deg_to_rad_with_sig_figs(num_degrees, prec=-1):
         The angle in radians rounded to the correct number of significant figures.
     num_rad_sig_figs : int
         The number of significant figures in the radian angle value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the number of degrees is not a float or int or the precision is not a float or int.
+    ValueError
+        Raised if the precision is zero or negative (if it is not the default value of -1)
     """
-    error_lib.check_type(num_degrees, float, "Angle Size in Degrees", alt_type=float)
+    error_lib.check_type(num_degrees, float, "Angle Size in Degrees", alt_type=int)
     error_lib.check_type(prec, int, "Degree Angle Size Precision", alt_type=float)
     if prec != -1:
         error_lib.check_value_is_positive(prec, "Degree Angle Size Precision")
@@ -390,11 +397,48 @@ def convert_deg_to_rad_with_sig_figs(num_degrees, prec=-1):
     return rounded_num_rads, num_rad_sig_figs
 
 
+def convert_rad_to_deg_with_sig_figs(num_radians, prec=-1):
+    """Converts an angle in radians to the equivalent number of radians (rounded to the correct number of significant
+    figures).
+
+    Parameters
+    ----------
+    num_radians : int | float
+        The angle in radians.
+    prec : int | float, default -1
+        The precision of the angle measured in radians (-1 if it is infinitely precise, 10 if it is known to the tens
+        place, 1 if it is known to the ones place, 0.1 if it is known to the tenths, etc.).
+
+    Returns
+    -------
+    rounded_num_degrees : float
+        The angle in degrees rounded to the correct number of significant figures.
+    num_deg_sig_figs : int
+        The number of significant figures in the degree angle value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the number of radians is not a float or int or the precision is not a float or int.
+    ValueError
+        Raised if the precision is zero or negative (if it is not the default value of -1)
+    """
+    error_lib.check_type(num_radians, float, "Angle Size in Radians", alt_type=int)
+    error_lib.check_type(prec, int, "Radian Angle Size Precision", alt_type=float)
+    if prec != -1:
+        error_lib.check_value_is_positive(prec, "Radian Angle Size Precision")
+    unrounded_num_degrees = (360.0 / (2.0 * PI)) * num_radians
+    rounded_num_degrees = unrounded_num_degrees
+    num_deg_sig_figs = -1
+    if prec != -1:
+        num_rad_sig_figs = get_num_sig_figs(num_radians, prec)
+        num_deg_sig_figs = num_rad_sig_figs
+        rounded_num_degrees = round_to_num_sig_figs(unrounded_num_degrees, num_deg_sig_figs)
+    return rounded_num_degrees, num_deg_sig_figs
 
 
 
-
-def rect_area(length, width, length_prec=-1, width_prec=-1):
+def rect_area_with_sig_figs(length, width, length_prec=-1, width_prec=-1):
     error_lib.check_type(length, float, "length", alt_type=int)
     error_lib.check_value_is_positive_or_zero(length, "length")
     error_lib.check_type(width, float, "width", alt_type=int)
@@ -408,12 +452,12 @@ def rect_area(length, width, length_prec=-1, width_prec=-1):
     rect_area, rect_area_num_sig_figs = mult_vals_with_sig_figs(length, width, length_prec, width_prec)
     return rect_area, rect_area_num_sig_figs
 
-def square_area(side_length, side_length_prec=-1):
+def square_area_with_sig_figs(side_length, side_length_prec=-1):
     error_lib.check_type(side_length, float, "side length", alt_type=int)
     error_lib.check_value_is_positive_or_zero(side_length, "side length")
     error_lib.check_type(side_length_prec, float, "side length precision", alt_type=int)
     if side_length_prec != -1:
         error_lib.check_value_is_positive(side_length_prec, "side length precision")
-    square_area, square_area_num_sig_figs = rect_area(side_length, side_length, side_length_prec, side_length_prec)
+    square_area, square_area_num_sig_figs = rect_area_with_sig_figs(side_length, side_length, side_length_prec, side_length_prec)
     return square_area, square_area_num_sig_figs
 
