@@ -160,7 +160,13 @@ if test_add_list_vals_with_sig_figs or run_all_tests:
     test_lib.run_func_tests(math_lib.add_list_vals_with_sig_figs, [
         IOPair(([],), (0, -1)),
         IOPair(([1],), (1, -1)),
-        IOPair(([1],[-1]), (1,-1)),
+        IOPair(([1],0.1), (1.0, 2)),
+        IOPair(([100], 1), (100, 3)),
+        IOPair(([106], 10), (110, 2)),
+        IOPair(([1], [-1]), (1,-1)),
+        IOPair(([1, 2, 3],), (6, -1)),
+        IOPair(([1.1, 2.1, 3.1], 0.1), (6.3, 2)),
+        IOPair(([1.1, 2.1, 3.1], [0.1, 0.01, 0.1]), (6.3, 2)),
     ])
 
 if test_mult_vals_with_sig_figs or run_all_tests:
