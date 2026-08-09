@@ -32,6 +32,35 @@ def find_num_integer_digits(val):
     if int_val > 0:
         num_integer_digits = int(m.log10(int_val)) + 1
     return num_integer_digits
+
+def find_num_integer_digits_in_list_vals(val_list):
+    """Finds the number of integer digits in each element of a list containing floats and/or integers.
+
+    Note: This function defines the number of integer digits in 0 as zero. Values 1-9.999... have one integer digit,
+    10-99.999... have two, etc. The same rules apply for negative values.
+
+    Parameters
+    ----------
+    val_list : list[float | int]
+        The value in which we should find the number of integer digits.
+
+    Returns
+    -------
+    num_integer_digits : int
+        The number of integer digits in the provided float or integer value.
+
+    Raises
+    ------
+    TypeError
+        Raised if the value to round is not a float or integer.
+    """
+    error_lib.check_type(val_list, list, "find integer digits value list", alt_type)
+    # int_val = abs(int(val))
+    # num_integer_digits = 0
+    # if int_val > 0:
+    #     num_integer_digits = int(m.log10(int_val)) + 1
+    # return num_integer_digits
+
 #
 # def find_num_decimal_digits(val):
 #     error_lib.check_type(val, float, "find decimal digits value", alt_type=int)
