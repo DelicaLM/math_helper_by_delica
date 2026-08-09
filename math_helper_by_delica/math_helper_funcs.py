@@ -287,6 +287,8 @@ def add_list_vals_with_sig_figs(val_list, precisions=-1):
         this value will be -1 (because a constant theoretically has infinitely many significant figures).
     """
     error_lib.check_type(val_list, list, "Value List (in add list values with sig figs)")
+    error_lib.check_list_item_types(val_list, int, "Value List (in add list values with sig figs)",
+                                    alt_type=float)
     error_lib.check_type(precisions, list, "Value Precisions (in add list values with sig figs)",
                          alt_types=[int, float])
     unrounded_result = sum(val_list)
@@ -356,6 +358,71 @@ def mult_vals_with_sig_figs(val_1, val_2, val_1_prec=-1, val_2_prec=-1):
     if num_prod_sig_figs != -1:
         rounded_prod = round_to_num_sig_figs(unrounded_result, num_prod_sig_figs)
     return rounded_prod, num_prod_sig_figs
+
+def mult_list_vals_with_sig_figs(val_list, precisions=-1):
+    """Calculates the product of all values in a list rounded to the correct number of significant figures.
+
+    Parameters
+    ----------
+    val_list : list[int | float]
+        The list of values to sum.
+    precisions : int | float | list[int | float], default -1
+        The precisions of the list values (e.g., -1 for infinite precision, 10 for value rounded to the tens, 1 for
+        value rounded to the ones place, 0.1 for value rounded to the tenths place, etc.). If a single precision value
+        is provided, this precision will be applied to all of the list values. If the list contains values with
+        different precisions, provide the different values in the form of a list. Unlike for the addition version of
+        this function, THE ORDER OF THE PRECISIONS DOES MATTER when we are calculating a product with significant
+        figures. For each value in the list (if there is not a universal precision value), we need its precision
+        to calculate the number of significant figures. If we apply the wrong precision to a value, we will get an
+        incorrect number of significant figures, and the result product will most likely be rounded to an incorrect
+        order of magnitude. In cases when the user provides a list of precisions that is shorter than the list of
+        values, the last precision value in the list will be used for the remaining list items.
+
+    Returns
+    -------
+    rounded_prod : int | float
+        The product of the list values rounded to the correct number of significant figures.
+    num_sig_figs : int
+        The number of significant figures in the product value. If the product is a constant with an infinite precision,
+        this value will be -1 (because a constant theoretically has infinitely many significant figures).
+    """
+    error_lib.check_type(val_list, list, "Value List (in mult list values with sig figs)")
+    error_lib.check_list_item_types(val_list, int, "Value List (in mult list values with sig figs)",
+                                    alt_type=float)
+    error_lib.check_type(precisions, list, "Value Precisions (in mult  list values with sig figs)",
+                         alt_types=[int, float])
+    val_list_length = len(val_list)
+    rounded_prod = 0
+    num_sig_figs = -1
+    if not (val_list_length == 0 or precisions == -1 or precisions == [] or max(precisions) == -1):
+        list_precisions = [-1]
+        if type(precisions) == int or type(precisions) == float:
+            list_precisions = [precisions]
+        elif len(precisions) > 0:
+            list_precisions = precisions
+        item_num_sig_figs = val_list_length * [-1]
+        item_index = 0
+        max_prec_index = len(list_precisions) - 1
+        prec_index = 0
+        while item_index < val_list_length:
+            curr_item = val_list[item_index]
+            curr_prec = list_precisions[prec_index]
+            curr_num_sig_figs = get_num_sig_figs(curr_item, curr_prec)
+            item_num_sig_figs[item_index] = curr_num_sig_figs
+            item_index += 1
+            prec_index = min(prec_index + 1, max_prec_index)
+        item_num_sig_figs.remove(-1)
+        if len(item_num_sig_figs) > 0:
+            num_sig_figs = min(item_num_sig_figs)
+    if num_sig_figs == 0 or val_list_length == 0:
+        rounded_prod = 0.0
+    else:
+        unrounded_prod = m.prod(val_list)
+        if num_sig_figs == -1:
+            rounded_prod = unrounded_prod
+        else:
+            rounded_prod = round_to_num_sig_figs(unrounded_prod, num_sig_figs)
+    return rounded_prod, num_sig_figs
 
 def convert_deg_to_rad_with_sig_figs(num_degrees, prec=-1):
     """Converts an angle in degrees to the equivalent number of radians (rounded to the correct number of significant
