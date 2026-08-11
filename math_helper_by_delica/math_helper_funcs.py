@@ -54,7 +54,11 @@ def find_num_integer_digits_in_list_vals(val_list):
     TypeError
         Raised if the value to round is not a float or integer.
     """
-    error_lib.check_type(val_list, list, "find integer digits value list", alt_type)
+    error_lib.check_type(val_list, list, "find integer digits value list")
+    error_lib.check_list_item_types(val_list, int, "find integer digits value list", float)
+    int_vals = [int(x) for x in val_list]
+    abs_vals = [abs(x) for x in int_vals]
+
     # int_val = abs(int(val))
     # num_integer_digits = 0
     # if int_val > 0:
