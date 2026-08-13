@@ -615,3 +615,5 @@ def calc_dot_product(vec1, vec2, slow_method=False):
     return result
 
 
+
+
