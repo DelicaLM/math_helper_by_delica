@@ -570,10 +570,11 @@ def calc_list_mean(val_list, slow_method=False):
     result = 0
     list_len = len(val_list)
     if list_len > 0:
-        result = sum(val_list) / list_len
-    else:
-        for val in val_list:
-            result += float(val) / list_len
+        if not slow_method:
+            result = sum(val_list) / list_len
+        else:
+            for val in val_list:
+                result += float(val) / list_len
     return result
 
 def calc_list_median(val_list, slow_method=False):
@@ -583,25 +584,33 @@ def calc_list_median(val_list, slow_method=False):
     result = None
     list_len = len(val_list)
     if list_len > 0:
-        sorted_list = sorted(val_list)
-        result = sorted_list[list_len // 2]
-        if list_len % 2 == 0:
-            result = (sorted_list[list_len // 2] + sorted_list[list_len // 2 + 1]) / 2.0
-    else:
-        sorted_list = []
-        temp_list = deepcopy(val_list)
-        while len(temp_list) > 0:
-            min_in_temp = min(temp_list)
-            sorted_list.append(min_in_temp)
-            temp_list.remove(min_in_temp)
-        mid_index = list_len // 2
-        if list_len % 2 != 0:
-            result = sorted_list[mid_index]
+        if not slow_method:
+            sorted_list = sorted(val_list)
+            result = sorted_list[list_len // 2]
+            if list_len % 2 == 0:
+                result = (sorted_list[list_len // 2] + sorted_list[list_len // 2 + 1]) / 2.0
         else:
-            result = (sorted_list[mid_index] + sorted_list[mid_index + 1])/2.0
+            sorted_list = []
+            temp_list = deepcopy(val_list)
+            while len(temp_list) > 0:
+                min_in_temp = min(temp_list)
+                sorted_list.append(min_in_temp)
+                temp_list.remove(min_in_temp)
+            mid_index = list_len // 2
+            if list_len % 2 != 0:
+                result = sorted_list[mid_index]
+            else:
+                result = (sorted_list[mid_index] + sorted_list[mid_index + 1])/2.0
     return result
 
 
-def calc_dot_product(vec1, vec2):
+def calc_dot_product(vec1, vec2, slow_method=False):
     error_lib.check_type(vec1, tuple, "vector 1", alt_type=list)
     error_lib.check_type(vec2, tuple, "vector 2", alt_type=list)
+    result = 0.0
+    if slow_method:
+        #ensure the vectors have the same length
+        for val_index in range(len(vec1)):
+            result += vec1[val_index] * vec2[val_index]
+
+
