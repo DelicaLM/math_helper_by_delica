@@ -612,5 +612,6 @@ def calc_dot_product(vec1, vec2, slow_method=False):
         #ensure the vectors have the same length
         for val_index in range(len(vec1)):
             result += vec1[val_index] * vec2[val_index]
+    return result
 
 
