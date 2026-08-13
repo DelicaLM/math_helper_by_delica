@@ -1,5 +1,7 @@
 import math
 import math as m
+from copy import deepcopy
+
 import error_helper_by_delica as error_lib
 
 PI = m.pi
@@ -561,3 +563,45 @@ def square_area_with_sig_figs(side_length, side_length_prec=-1):
     square_area, square_area_num_sig_figs = rect_area_with_sig_figs(side_length, side_length, side_length_prec, side_length_prec)
     return square_area, square_area_num_sig_figs
 
+def calc_list_mean(val_list, slow_method=False):
+    error_lib.check_type(val_list, list, "val_list")
+    error_lib.check_list_item_types(val_list, int, "val_list", alt_type=float)
+    error_lib.check_type(slow_method, bool, "slow_method")
+    result = 0
+    list_len = len(val_list)
+    if list_len > 0:
+        result = sum(val_list) / list_len
+    else:
+        for val in val_list:
+            result += float(val) / list_len
+    return result
+
+def calc_list_median(val_list, slow_method=False):
+    error_lib.check_type(val_list, list, "val_list")
+    error_lib.check_list_item_types(val_list, int, "val_list", alt_type=float)
+    error_lib.check_type(slow_method, bool, "slow_method")
+    result = None
+    list_len = len(val_list)
+    if list_len > 0:
+        sorted_list = sorted(val_list)
+        result = sorted_list[list_len // 2]
+        if list_len % 2 == 0:
+            result = (sorted_list[list_len // 2] + sorted_list[list_len // 2 + 1]) / 2.0
+    else:
+        sorted_list = []
+        temp_list = deepcopy(val_list)
+        while len(temp_list) > 0:
+            min_in_temp = min(temp_list)
+            sorted_list.append(min_in_temp)
+            temp_list.remove(min_in_temp)
+        mid_index = list_len // 2
+        if list_len % 2 != 0:
+            result = sorted_list[mid_index]
+        else:
+            result = (sorted_list[mid_index] + sorted_list[mid_index + 1])/2.0
+    return result
+
+
+def calc_dot_product(vec1, vec2):
+    error_lib.check_type(vec1, tuple, "vector 1", alt_type=list)
+    error_lib.check_type(vec2, tuple, "vector 2", alt_type=list)
