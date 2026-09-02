@@ -614,6 +614,51 @@ def calc_dot_product(vec1, vec2, slow_method=False):
             result += vec1[val_index] * vec2[val_index]
     return result
 
+def get_primes_up_to(pos_int : int = 1):
+    error_lib.check_type(pos_int, int, "pos_int")
+    error_lib.check_value_is_positive(pos_int, "pos_int")
+    possible_primes = list(range(2, pos_int+1))
+    is_prime = [True] * (pos_int-1)
+    curr_num = 2
+    curr_num_index = 0
+    sqrt_n = int(math.sqrt(pos_int))
+    sqrt_n_index = sqrt_n - 2
+    primes_list = []
+    if sqrt_n_index >= 0:
+        while curr_num_index <= sqrt_n_index:
+            if is_prime[curr_num_index]:
+                curr_num = possible_primes[curr_num_index]
+                mult_num = 2
+                while mult_num*curr_num < len(possible_primes) + 2:
+                    is_prime[mult_num*curr_num-2] = False
+                    mult_num += 1
+            curr_num_index += 1
+    final_check_index = 0
+    while final_check_index < len(possible_primes):
+        if is_prime[final_check_index]:
+            primes_list.append(possible_primes[final_check_index])
+        final_check_index += 1
+    return primes_list
 
 
 
+def get_prime_factorization(pos_int):
+    error_lib.check_type(pos_int, int, "pos_int")
+    error_lib.check_value_is_positive(pos_int, "pos_int")
+    prime_factors_list = []
+    possible_prime_factors = get_primes_up_to(int(pos_int/2))
+    num = pos_int
+    for prime in possible_prime_factors:
+        temp_num = pos_int
+        while temp_num > 1 and temp_num % prime == 0:
+            prime_factors_list.append(prime)
+            temp_num /= prime
+    if len(prime_factors_list) == 0:
+        prime_factors_list.append(pos_int)
+    return prime_factors_list
+
+
+test = get_primes_up_to(4)
+test2 = get_prime_factorization(24)
+print(test)
+print(test2)
