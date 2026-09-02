@@ -617,28 +617,30 @@ def calc_dot_product(vec1, vec2, slow_method=False):
 
 def get_primes_up_to(pos_int : int = 1) -> list[int]:
     error_lib.check_type(pos_int, int, "pos_int")
-    error_lib.check_value_is_positive(pos_int, "pos_int")
-    possible_primes = list(range(2, pos_int+1))
-    is_prime = [True] * (pos_int-1)
-    curr_num = 2
-    curr_num_index = 0
-    sqrt_n = int(math.sqrt(pos_int))
-    sqrt_n_index = sqrt_n - 2
+    error_lib.check_value_is_positive_or_zero(pos_int, "pos_int")
     primes_list = []
-    if sqrt_n_index >= 0:
-        while curr_num_index <= sqrt_n_index:
-            if is_prime[curr_num_index]:
-                curr_num = possible_primes[curr_num_index]
-                mult_num = 2
-                while mult_num*curr_num < len(possible_primes) + 2:
-                    is_prime[mult_num*curr_num-2] = False
-                    mult_num += 1
-            curr_num_index += 1
-    final_check_index = 0
-    while final_check_index < len(possible_primes):
-        if is_prime[final_check_index]:
-            primes_list.append(possible_primes[final_check_index])
-        final_check_index += 1
+    if pos_int > 0:
+        possible_primes = list(range(2, pos_int+1))
+        is_prime = [True] * (pos_int-1)
+        curr_num = 2
+        curr_num_index = 0
+        sqrt_n = int(math.sqrt(pos_int))
+        sqrt_n_index = sqrt_n - 2
+        primes_list = []
+        if sqrt_n_index >= 0:
+            while curr_num_index <= sqrt_n_index:
+                if is_prime[curr_num_index]:
+                    curr_num = possible_primes[curr_num_index]
+                    mult_num = 2
+                    while mult_num*curr_num < len(possible_primes) + 2:
+                        is_prime[mult_num*curr_num-2] = False
+                        mult_num += 1
+                curr_num_index += 1
+        final_check_index = 0
+        while final_check_index < len(possible_primes):
+            if is_prime[final_check_index]:
+                primes_list.append(possible_primes[final_check_index])
+            final_check_index += 1
     return primes_list
 
 
@@ -662,18 +664,33 @@ def print_prime_factor_tree(pos_int : int = 1) -> list[int]:
     error_lib.check_type(pos_int, int, "pos_int")
     error_lib.check_value_is_positive(pos_int, "pos_int")
     prime_factorization = get_prime_factorization(pos_int)
-    x_spaces_per_level = 1
+    x_spaces_per_level = 2
     tree_height = len(prime_factorization)
-    print(pos_int)
+    print(" "*(x_spaces_per_level-1), pos_int)
     if tree_height > 1:
         curr_height = 1
+        curr_int_val = pos_int
+        curr_x_offset = curr_height * x_spaces_per_level
+        while curr_height < tree_height:
+            print(" "*(curr_x_offset-2),"/","\\")
+            first_factor = prime_factorization[curr_height-1]
+            second_factor = int(curr_int_val / first_factor)
+            curr_int_val /= first_factor
+            if curr_height == 1:
+                print(first_factor, " ", second_factor)
+            else:
+                print(" "*(curr_x_offset-2), first_factor, " ", second_factor)
+            curr_height += 1
+            curr_x_offset = curr_height * x_spaces_per_level
 
 
 
     return prime_factorization
 
+#
+# test = get_primes_up_to(4)
+# test2 = get_prime_factorization(48)
+# print(test)
+# print(test2)
 
-test = get_primes_up_to(4)
-test2 = get_prime_factorization(48)
-print(test)
-print(test2)
+print_prime_factor_tree(24)
