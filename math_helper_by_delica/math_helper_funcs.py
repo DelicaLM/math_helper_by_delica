@@ -614,7 +614,8 @@ def calc_dot_product(vec1, vec2, slow_method=False):
             result += vec1[val_index] * vec2[val_index]
     return result
 
-def get_primes_up_to(pos_int : int = 1):
+
+def get_primes_up_to(pos_int : int = 1) -> list[int]:
     error_lib.check_type(pos_int, int, "pos_int")
     error_lib.check_value_is_positive(pos_int, "pos_int")
     possible_primes = list(range(2, pos_int+1))
@@ -642,7 +643,7 @@ def get_primes_up_to(pos_int : int = 1):
 
 
 
-def get_prime_factorization(pos_int):
+def get_prime_factorization(pos_int : int = 1) -> list[int]:
     error_lib.check_type(pos_int, int, "pos_int")
     error_lib.check_value_is_positive(pos_int, "pos_int")
     prime_factors_list = []
@@ -657,8 +658,22 @@ def get_prime_factorization(pos_int):
         prime_factors_list.append(pos_int)
     return prime_factors_list
 
+def print_prime_factor_tree(pos_int : int = 1) -> list[int]:
+    error_lib.check_type(pos_int, int, "pos_int")
+    error_lib.check_value_is_positive(pos_int, "pos_int")
+    prime_factorization = get_prime_factorization(pos_int)
+    x_spaces_per_level = 1
+    tree_height = len(prime_factorization)
+    print(pos_int)
+    if tree_height > 1:
+        curr_height = 1
+
+
+
+    return prime_factorization
+
 
 test = get_primes_up_to(4)
-test2 = get_prime_factorization(24)
+test2 = get_prime_factorization(48)
 print(test)
 print(test2)
