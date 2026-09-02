@@ -664,9 +664,9 @@ def print_prime_factor_tree(pos_int : int = 1) -> list[int]:
     error_lib.check_type(pos_int, int, "pos_int")
     error_lib.check_value_is_positive(pos_int, "pos_int")
     prime_factorization = get_prime_factorization(pos_int)
-    x_spaces_per_level = 2
+    x_spaces_per_level = 3
     tree_height = len(prime_factorization)
-    print(" "*(x_spaces_per_level-1), pos_int)
+    print(" "*(x_spaces_per_level-2), pos_int)
     if tree_height > 1:
         curr_height = 1
         curr_int_val = pos_int
@@ -677,20 +677,35 @@ def print_prime_factor_tree(pos_int : int = 1) -> list[int]:
             second_factor = int(curr_int_val / first_factor)
             curr_int_val /= first_factor
             if curr_height == 1:
-                print(first_factor, " ", second_factor)
+                print(first_factor, "  ", second_factor)
             else:
-                print(" "*(curr_x_offset-2), first_factor, " ", second_factor)
+                print(" "*(curr_x_offset-3), first_factor, "  ", second_factor)
             curr_height += 1
             curr_x_offset = curr_height * x_spaces_per_level
-
-
-
+    factor_string = str(pos_int)
+    if tree_height > 1:
+        factor_string = str(prime_factorization[0])
+        factor_index = 1
+        while factor_index < len(prime_factorization):
+            factor_string += " * " + str(prime_factorization[factor_index])
+            factor_index += 1
+    print(pos_int, "=", factor_string)
     return prime_factorization
 
-#
-# test = get_primes_up_to(4)
-# test2 = get_prime_factorization(48)
-# print(test)
-# print(test2)
+def get_gcf(pos_int1 : int = 1, pos_int2 : int = 1) -> int:
+    error_lib.check_type(pos_int1, int, "pos_int")
+    error_lib.check_value_is_positive(pos_int1, "pos_int")
+    error_lib.check_type(pos_int2, int, "pos_int")
+    error_lib.check_value_is_positive(pos_int2, "pos_int")
+    result = 1
+    if pos_int1 > 1 and pos_int2 > 1:
+        int1_factors = get_prime_factorization(pos_int1)
+        int2_factors = get_prime_factorization(pos_int2)
+        shared_factors = []
+        int1_num_factors = len(int1_factors)
+        int2_num_factors = len(int2_factors)
+        int1_has_less_factors = int1_num_factors < int2_num_factors
 
-print_prime_factor_tree(24)
+    return result
+
+print_prime_factor_tree(160)
