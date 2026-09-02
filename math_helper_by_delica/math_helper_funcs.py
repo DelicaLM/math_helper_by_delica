@@ -698,14 +698,78 @@ def get_gcf(pos_int1 : int = 1, pos_int2 : int = 1) -> int:
     error_lib.check_type(pos_int2, int, "pos_int")
     error_lib.check_value_is_positive(pos_int2, "pos_int")
     result = 1
+    shared_factors = []
     if pos_int1 > 1 and pos_int2 > 1:
         int1_factors = get_prime_factorization(pos_int1)
         int2_factors = get_prime_factorization(pos_int2)
-        shared_factors = []
-        int1_num_factors = len(int1_factors)
-        int2_num_factors = len(int2_factors)
-        int1_has_less_factors = int1_num_factors < int2_num_factors
-
+        while len(int1_factors) > 0 and len(int2_factors) > 0:
+            curr_int1_factor = int1_factors[0]
+            curr_int2_factor = int2_factors[0]
+            if curr_int1_factor == curr_int2_factor:
+                shared_factors.append(curr_int1_factor)
+                int1_factors.pop(0)
+                int2_factors.pop(0)
+            else:
+                if curr_int1_factor > curr_int2_factor:
+                    int2_factors.pop(0)
+                else:
+                    int1_factors.pop(0)
+    if len(shared_factors) > 1:
+        result = m.prod(shared_factors)
+    elif len(shared_factors) == 1:
+        result = shared_factors[0]
     return result
 
-print_prime_factor_tree(160)
+# def get_common_denom_fractions(num_1 : int = 1, denom_1 : int = 1, num_2 : int = 1, denom_2 : int = 1) \
+#         -> (int, int, int, int):
+#     error_lib.check_type(num_1, int, "numerator 1")
+#     error_lib.check_value_is_positive_or_zero(num_1, "numerator 1")
+#     error_lib.check_type(denom_1, int, "denominator 1")
+#     error_lib.check_value_is_positive(denom_1, "denominator 1")
+#     error_lib.check_type(num_2, int, "numerator 2")
+#     error_lib.check_value_is_positive_or_zero(num_2, "numerator 2")
+#     error_lib.check_type(denom_2, int, "denominator 2")
+#     error_lib.check_value_is_positive(denom_2, "denominator 2")
+#     result_num_1 = num_1
+#     result_denom_1 = denom_1
+#     result_num_2 = num_2
+#     result_denom_2 = denom_2
+#
+#     return result_num_1, result_denom_1, result_num_2, result_denom_2
+
+def simplify_fraction(num_int : int = 1, denom_int : int = 1) -> (int, int):
+    error_lib.check_type(num_int, int, "integer numerator")
+    error_lib.check_value_is_positive_or_zero(num_int, "integer numerator")
+    error_lib.check_type(denom_int, int, "integer denominator")
+    error_lib.check_value_is_positive(denom_int, "integer denominator")
+    simplified_numerator = num_int
+    simplified_denominator = denom_int
+    if simplified_numerator > 1:
+        gcf = get_gcf(num_int, denom_int)
+        if gcf > 1:
+            simplified_numerator = int(simplified_numerator / gcf)
+            simplified_denominator = int(simplified_denominator / gcf)
+    return simplified_numerator, simplified_denominator
+
+
+
+def fracs_are_eq(num_1 : int = 1, denom_1 : int = 1, num_2 : int = 1, denom_2 : int = 1) -> bool:
+    error_lib.check_type(num_1, int, "numerator 1")
+    error_lib.check_value_is_positive_or_zero(num_1, "numerator 1")
+    error_lib.check_type(denom_1, int, "denominator 1")
+    error_lib.check_value_is_positive(denom_1, "denominator 1")
+    error_lib.check_type(num_2, int, "numerator 2")
+    error_lib.check_value_is_positive_or_zero(num_2, "numerator 2")
+    error_lib.check_type(denom_2, int, "denominator 2")
+    error_lib.check_value_is_positive(denom_2, "denominator 2")
+    fracs_are_equal = num_1 == 0 and num_2 == 0
+    if not fracs_are_equal:
+        simp_frac_num_1, simp_frac_denom_1 = simplify_fraction(num_1, denom_1)
+        simp_frac_num_2, simp_frac_denom_2 = simplify_fraction(num_2, denom_2)
+        if simp_frac_denom_1 == simp_frac_denom_2:
+            fracs_are_equal = simp_frac_num_1 == simp_frac_num_2
+    return fracs_are_equal
+
+
+print(fracs_are_eq(1, 3, 3, 9))
+#print_prime_factor_tree(160)
